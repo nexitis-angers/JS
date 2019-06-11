@@ -1,0 +1,54 @@
+<div ng-controller="cellarCtrl" ng-init="init();">
+    <div class="row mt-4 pt-4">
+        <div class="col-12">
+            <h3>Rechercher sur "Open Food Facts"</h3>
+            <!-- Recherche depuis OpenFoodFacts -->
+            <div class="input-group">
+                <input type="text" ng-model="searchInput" class="form-control" placeholder="Rechercher sur OpenFoodFacts (ex : Farine de blé, Nutella, ...)">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary" ng-click="searchProduct(searchInput); newRecipeName = undefined;" 
+                    ng-disabled="searchInput === undefined || searchInput === null || searchInput === ''"
+                    type="button"><img src="src/assets/img/openfoodfacts-logo.png" width="16" height="16" />
+                    </button>
+                    <button class="btn btn-success" ng-click="addUnknownProduct(searchInput); newRecipeName = undefined;" 
+                    ng-disabled="searchInput === undefined || searchInput === null || searchInput === ''"
+                    type="button">Ajouter au cellier
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3 mb-1 p-2" ng-repeat="product in searchResult">
+                        <div class="card">
+                                <div style="height:150px">
+                                    <img src="{{product.img}}" class="card-img-top" alt="Product photo" style="width:100%;height:100%;object-fit: cover;" />
+                                </div>                                        
+                                <p class="card-title">{{product.name}}</p>
+                                <button class="btn btn-block btn-primary" ng-click="add(product);">Ajouter</button>
+
+                            </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <hr class="mt-1 ml-4 mb-1 mr-4" ng-if="searchResult" />
+    <div class="row">
+        <div class="col-12 mt-4 mb-2">
+            <h3>Notre cellier</h3>
+            <div class="media mb-2" ng-repeat="product in cellar track by $index">
+                <div style="height: 64px; width:64px">
+                        <img src="{{product.img}}" class="align-self-center mr-3" style="width:100%;height:100%;object-fit: cover;" alt="Product image" width="64" height="64" />
+                </div>
+                
+                <div class="media-body pl-4">
+                    <h5 class="mt-0">{{product.name}}</h5>
+                    <button type="button" class="btn btn-sm btn-danger float-right align-self-center" ng-click="remove(product);">Retirer</button>
+                    <ul class="list-inline">
+                        <li ng-repeat="allergen in product.allergens" class="list-inline-item text-danger">{{allergen}}</li>
+                    </ul>                    
+                </div>
+            </div>
+            <i ng-if="cellar === null || cellar === undefined || cellar.length === 0" class="text-secondary">Le cellier est vide :(</i>
+        </div>
+    </div>
+</div>

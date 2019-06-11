@@ -1,0 +1,119 @@
+<div class="row mt-4 pt-4" style="height: 100%;">
+    <div class="col-3" ng-controller="recipeListCtrl" ng-init="init();" style="border-right: 2px solid var(--dark);">
+        
+        <!-- Formulaire de création d'une recette -->
+        <div class="input-group mb-3">
+                <input type="text" ng-model="newRecipeName" class="form-control" placeholder="Nouvelle recette" aria-label="Nouvelle étape">
+                <div class="input-group-append">
+                  <button class="btn btn-success" ng-click="addRecipe(newRecipeName); newRecipeName = undefined;" 
+                  ng-disabled="newRecipeName === undefined || newRecipeName === null || newRecipeName === ''"
+                   type="button">+</button>
+                </div>
+              </div>
+        
+        <!-- Affichage et itération des recettes -->
+        <ul class="list-group">
+            <li class="list-group-item" 
+                ng-repeat="recipe in recipes track by $index"
+                ng-click="selectRecipe(recipe);">
+                <strong>{{recipe.name}}</strong>
+                <button type="button" ng-click="removeRecipe(recipe);" class="btn btn-danger float-right">X</button>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Partie de droite -->
+    <div class="col-9" ng-controller="recipeDetailCtrl" ng-init="init();">
+        
+        <div>
+            <div class="form-group">
+                <input type="text" ng-model="searchName" class="form-control" />
+                <button ng-click="search(searchName);" class="btn btn-primary btn-block mt-2 mb-3" >Rechercher</button> 
+            </div>
+
+            {{searchResult}}
+        </div>
+
+
+        <div ng-if="recipe !== undefined && recipe !== null">
+        
+        <h2>{{recipe.name}} <small style="font-style: italic; font-size: small" class="text-danger">{{allergens}}</small></h2>
+        
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label class="label">Nombre de parts</label>
+                    <select class="custom-select" ng-model="recipe.partNumber" ng-options="qt for qt in populatePartNumbers(2,10)"></select>
+                </div>
+            </div>
+
+            <div class="col-4">
+                    <div class="form-group">
+                        <label class="label">Durée de préparation</label>
+                        <input type="number" placeholder="en minutes" class="form-control" ng-model="recipe.preparationTime" />
+                    </div>
+                </div>
+
+                <div class="col-4">
+                        <div class="form-group">
+                            <label class="label">Durée de cuisson</label>
+                            <input type="number" placeholder="en minutes" class="form-control" ng-model="recipe.cookingTime" />
+                        </div>
+                    </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                    <h3>Liste des étapes :</h3>
+                    <div class="input-group mb-3">
+                            <input type="text" ng-model="newStepDescription" class="form-control" placeholder="Nouvelle étape" aria-label="Nouvelle étape">
+                            <div class="input-group-append">
+                              <button class="btn btn-outline-success" ng-click="addNewStep(newStepDescription); newStepDescription = undefined;" type="button">+</button>
+                            </div>
+                          </div>
+
+                          <ol>
+                              <li ng-repeat="step in recipe.steps track by step.position">{{step.description}}</li>
+                          </ol>
+
+            </div>
+
+            <div class="col-6">
+                    <h3>Ingrédients :</h3>
+                    <div class="input-group mb-3">
+                            <select class="custom-select" ng-model="product" ng-options="product.name for product in products"></select>
+
+                            <div class="input-group-append">
+                              <button class="btn btn-outline-success" ng-click="addIngredient(product);" type="button">+</button>
+                            </div>
+                          </div>
+
+                          <div class="media mb-2" ng-repeat="ingredient in recipe.ingredients track by $index">
+                                <div style="height: 64px; width:64px">
+                                        <img src="{{ingredient.product.img}}" class="align-self-center mr-3" style="width:100%;height:100%;object-fit: cover;" alt="Product image" width="64" height="64" />
+                                </div>
+                                
+                                <div class="media-body pl-4">
+                                    <h5 class="mt-0">{{ingredient.product.name}}</h5>
+                                    <form class="form-inline">
+                                        <input type="number" class="form-control" style="width:75px;" ng-model="ingredient.qt" />
+                                        <select class="custom-select ml-1 mr-1" ng-model="ingredient.unit" ng-options="unit for unit in units"></select>
+                                        <button type="button" class="btn btn-danger float-right align-self-center" ng-click="removeIngredient(ingredient);">Retirer</button>
+                                    </form>                    
+                                </div>
+                            </div>
+                                    </div>
+
+        </div>
+        
+        <div class="row">
+            <div class="col-6 offset-3">
+                <button class="btn btn-success btn-block" ng-click="save();">
+                    Sauvegarder
+                </button>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
